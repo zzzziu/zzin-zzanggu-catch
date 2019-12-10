@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>두더지 짱구를 잡아랏!</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/bling.css">
+  <link href="https://fonts.googleapis.com/css?family=Jua&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style type="text/css">
+    html{cursor: url(face1.png), auto;}
+    #back{background: url(./back.jpg); background-size: cover; background-attachment: fixed;}
+  </style>
+
+</head>
+<body id="back">
+  <div id="ending" class="ending">
+      <p id="ending-box"></p>
+    </div>
+    <div id="ending-bg" class="ending-bg">
+    </div>  
+  <header>
+      <h1 class="title">🐹 두더지 짱구를 잡아랏 🐹</h1> 
+  </header>
+  <div class="main">
+
+    <div>
+        <img id="zz1" 
+        src="images/move.gif">
+    </div>
+    <div>
+        <img id="zz2" 
+        src="images/move.gif">
+    </div>
+
+     <audio loop id="song">
+        <source src="song.mp3" type="audio/mpeg"></audio> 
+
+    <ul class="whack-a-mole clearfix">
+      <li class="mole">
+        <img id="1" src="images/mole.png">
+      </li>
+      <li class="mole">
+        <img id="2" src="images/mole.png">
+      </li>
+      <li class="mole">
+        <img id="3" src="images/mole.png">
+      </li>
+      <li class="mole">
+        <img id="4" src="images/mole.png">
+      </li>
+      <li class="mole">
+        <img id="5" src="images/mole.png">
+      </li>
+      <li class="mole">
+        <img id="6" src="images/mole.png">
+      </li>
+      <li class="mole">
+        <img id="7" src="images/mole.png">
+      </li>
+      <li class="mole">
+        <img id="8" src="images/mole.png">
+      </li>
+      <li class="mole">
+        <img id="9" src="images/mole.png">
+      </li>
+    </ul>
+      <center><div class="btn-wrap">
+        <div class="point-wrap">
+        <p id="point-text">Point :</p>
+        <p id="count-mole">0</p>
+        <p id="count-mole2">/ 20</p>
+      </div>
+        <button type="button" class="start-btn">PRESS START</button>
+      </div>
+  </div>
+  </center>
+
+  <script type="text/javascript">
+    var moleNumber;
+  var randomNum;
+  var preNum;
+
+  var startBtn = document.querySelector('.start-btn');
+
+startBtn.addEventListener('click', startMole);
+
+function startMole(){
+  startBtn.removeEventListener('click', startMole);
+  startBtn.style.color = '#3d3f43';
+  getPoint = 0;
+  turn = 0;
+  setTimeout(showingMole, 1500);
+  song.play();
+}
+
+function randomHole(){
+  randomNum = Math.floor(Math.random() * 9);
+  if (preNum !== randomNum && randomNum > 0) {
+    preNum = randomNum; 
+    return randomNum;
+  }
+  return randomHole();
+ }
+
+function moleActive(num){
+    num.classList.add('active');
+}
+function moleHide(num){
+    num.classList.remove('active');
+}
+var moleCatch = 0;
+
+function showingMole(){
+  if(turn < 20){    // 플레이 제한 횟수
+    moleNumber = document.getElementById(`${randomHole()}`);
+    moleActive(moleNumber);
+    moleNumber.addEventListener('click', catchMole);
+    moleCatch = setTimeout(seeMOle, 700);
+    turn++;
+  }else{
+    modalEvent();
+    startBtn.addEventListener('click', startMole);
+    startBtn.textContent = 'PRESS AGAIN';
+    startBtn.style.color = '#f2ecff';
+  }
+}
+
+var cntBox = document.querySelector('#count-mole');
+function seeMOle(){
+  moleNumber.removeEventListener('click', catchMole);
+  moleHide(moleNumber);
+  clearTimeout(moleCatch);
+  setTimeout(showingMole, 1000);
+}
+
+function catchMole(){
+  seeMOle();
+  clearTimeout(moleCatch);
+  getPoint++;
+  cntBox.innerHTML = getPoint;
+}
+
+var endingBtn = document.querySelector('#ending-bg');
+var finalEnding = "finalEnding";
+
+endingBtn.addEventListener('click', hideModal); 
+
+function modalEvent(){
+  let point = (getPoint / 10) * 100;
+  if (point <= 200){
+    ending.children[0].innerHTML = "<span>GAME OVER </span></br>YOUR SCORE IS&nbsp;&nbsp;<span class='last'>" + point + '</span>!';
+  }else{
+    ending.children[0].innerHTML = "<span>YOU WIN</span></br>YOUR SCORE IS&nbsp;&nbsp;<span class='last'>" + point + '</span>!';
+  }
+  ending.classList.add(finalEnding);
+  endingBtn.classList.add(finalEnding);
+}
+function hideModal(){
+  ending.classList.remove(finalEnding);
+  endingBtn.classList.remove(finalEnding);
+}
+  </script>
+</body>
+</html>
